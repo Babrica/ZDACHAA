@@ -1,4 +1,4 @@
-let eventBus = new Vue()    //требования: дизайн - эстетичен и понятен для пользователя
+let eventBus = new Vue()
 
 Vue.component('cards-kanban', {
     template:`
@@ -57,27 +57,30 @@ Vue.component('cards-kanban', {
     }
 })
 
-Vue.component('fill', {     //содержит:дата создания, заголовок, описание задачи, дедлайн
-    props:{
-
-    },
+Vue.component('fill', {    //дата создания, заголовок, описание задачи, дедлайн
     template:`
     <div>
-    <div id="form">
-        <h3>Заполните карточку задачи</h3>
-        <form @submit.prevent="onSubmit">
-            <p class="pForm">Введите заголовок: 
-                <input required type="text" v-model="title" maxlength="30" placeholder="Заголовок">
-            </p>
-           <p class="pForm">Добавьте описание задаче:</p>
-            <textarea v-model="description" cols="40" rows="4"></textarea>
-            <p class="pForm">Укажите дату дедлайна: 
-                <input required type="date" v-model="dateD">
-            </p>
-            <p>
-                <input type="submit" value="Добвить задачу">
-            </p>
-        </form>
+    <div>
+        <button v-if="!show" @click="openModal">Добавьте задачу</button>
+        <div id="form" v-if="show" class="modal-shadow">
+            <div class="modal">
+                <div class="modal-close" @click="closeModal">&#10006;</div>
+                <h3>Заполните карточку задачи</h3>
+                <form @submit.prevent="onSubmit">
+                    <p class="pForm">Введите заголовок: 
+                        <input required type="text" v-model="title" maxlength="30" placeholder="Заголовок">
+                    </p>
+                    <p class="pForm">Добавьте описание задаче:</p>
+                    <textarea v-model="description" cols="40" rows="4"></textarea>
+                    <p class="pForm">Укажите дату дедлайна: 
+                        <input required type="date" v-model="dateD">
+                    </p>
+                    <p class="pForm">
+                        <input class="button" type="submit" value="Добвить задачу">
+                    </p>
+                </form>
+            </div>
+        </div>    
     </div>
     `,
     data(){
@@ -85,6 +88,7 @@ Vue.component('fill', {     //содержит:дата создания, заг
             title: null,
             description: null,
             dateD: null,
+            show: false
         }
     },
     methods: {
@@ -104,8 +108,15 @@ Vue.component('fill', {     //содержит:дата создания, заг
             this.title = null
             this.description = null
             this.dateD = null
+            this.closeModal()
             console.log(card)
         },
+        closeModal(){
+            this.show = false
+        },
+        openModal(){
+            this.show = true
+        }
     }
 })
 
@@ -348,8 +359,8 @@ Vue.component('column4', {  //проверка срока дедлайна: ср
                 <li><b>Дата создания:</b> {{ card.dateC }}</li>
                 <li><b>Дата выполнения:</b> {{ card.dateC }}</li>
                 <li><b>Дата дедлайна:</b> {{ card.dateD }}</li>
-                <li id="inTime" v-if="card.inTime">Задача выполнена в срок!!!</li>
-                <li id="notInTime" v-else>Задача выполнена не в срок :(</li>
+                <li id="inTime" v-if="card.inTime">Задача выполнена в срок!</li>
+                <li id="notInTime" v-else>Задача выполнена не в срок!</li>
             </ul>
         </div>
     </div>

@@ -1,44 +1,140 @@
+*{
+    font-weight: 500;
+}
+
+
 textarea{
-resize: none;
+    resize: none;
+    border: none;
+    padding: 8px 41px;
+    border-radius: 12px;
+    border: #48523D solid 2px;
 }
 
 body{
-    background-color: #d0edff;
+    background-color:#B5C6B8;
+    font-family: FreeMono, monospace;
 }
-
 .card{
     margin-bottom: 30px;
     margin-top: 25px;
-    background-color: rgba(239, 203, 245, .7);
-    border: #e1a0e7 solid 2px;
+    background-color: #EDF2F7 ;
+    border: #48523D solid 2px;
     border-radius: 12px;
-    padding-bottom: 14px;
-}
+    padding: 18px;
 
+}
 #columns{
     display: flex;
 }
-
 .column{
     width: 25%;
     text-align: center;
     padding: 0 20px;
 }
-
 .change{
     border-top: cadetblue 2px dotted;
     margin-top: 20px;
 }
-
 ul{
     padding: 0;
+    margin-bottom: 0px;
 }
-
 li{
     list-style-type: none;
     margin: 10px;
 }
-
 button{
-    padding: 7px 10px;
+    padding: 9px 20px;
+    border-radius: 7px;
+    border: none;
+    background-color: #8FA2CA;
+    margin-top: 15px;
+}
+button:hover{
+    background-color: #8FA2CA;
+    cursor: pointer;
+    transition: 0.5s;
+    color: #48523D;
+}
+#inTime{
+    color: darkolivegreen;
+    text-decoration: underline;
+}
+#notInTime {
+    color: firebrick;
+    text-decoration: underline;
+}
+.title{
+    margin-bottom: 25px;
+}
+#form {
+    margin: 50px 0;
+    display: block;
+    text-align: center;
+    margin-bottom: 70px;
+}
+.button{
+    padding: 9px 20px;
+    border-radius: 7px;
+    border: none;
+    background-color: #8FA2CA;
+    margin-top: 15px;
+    margin-bottom: -40px;
+}
+.button:hover{
+    background-color: #8FA2CA;
+    cursor: pointer;
+    transition: 0.5s;
+    color: #48523D ;
+}
+
+input{
+    border: none;
+    border: #48523D solid 2px;
+    width: 200px;
+    padding: 10px 12px;
+    border-radius: 12px;
+}
+
+.pForm{
+    margin-top: 35px;
+}
+
+/*модальное окно*/
+.modal-shadow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.39);
+    margin-top: -70px;
+}
+
+.modal {
+    background: #E4E8F4;
+    border-radius: 8px;
+    padding: 15px;
+    min-width: 420px;
+    max-width: 480px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal-close{
+    border-radius: 32%;
+    color: #fff;
+    background: #8FA2CA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
 }
