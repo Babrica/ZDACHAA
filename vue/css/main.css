@@ -1,5 +1,18 @@
 textarea{
-    resize: none;
+resize: none;
+}
+
+body{
+    background-color: #d0edff;
+}
+
+.card{
+    margin-bottom: 30px;
+    margin-top: 25px;
+    background-color: rgba(239, 203, 245, .7);
+    border: #e1a0e7 solid 2px;
+    border-radius: 12px;
+    padding-bottom: 14px;
 }
 
 #columns{
@@ -9,6 +22,12 @@ textarea{
 .column{
     width: 25%;
     text-align: center;
+    padding: 0 20px;
+}
+
+.change{
+    border-top: cadetblue 2px dotted;
+    margin-top: 20px;
 }
 
 ul{
@@ -17,4 +36,9 @@ ul{
 
 li{
     list-style-type: none;
+    margin: 10px;
+}
+
+button{
+    padding: 7px 10px;
 }
