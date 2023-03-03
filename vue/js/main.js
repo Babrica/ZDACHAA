@@ -33,6 +33,15 @@ Vue.component('cards-kanban', {
             this.column1.splice(this.column1.indexOf(card), 1)
 
         })
+        eventBus.$on('moving2', card => {
+            this.column3.push(card)
+            this.column2.splice(this.column2.indexOf(card), 1)
+        })
+
+        eventBus.$on('moving3-2', card => {
+            this.column2.push(card)
+            this.column3.splice(this.column3.indexOf(card), 1)
+        })
     }
 })
 
@@ -77,6 +86,7 @@ Vue.component('fill', {     //содержит:дата создания, заг
                 dateL: null,                            //дата последних изменений
                 dateE: null,                            //дата выполнения
                 inTime: true,                            //в срок или нет
+                reason: []
             }
             eventBus.$emit('card-create', card)
             this.title = null
@@ -160,6 +170,10 @@ Vue.component('column2', {  //редактирование, время посл�
         card:{
             type:Object,
             required: true
+        },
+        reason:{
+            type:Array,
+            required: true
         }
     },
     template:`
@@ -172,35 +186,159 @@ Vue.component('column2', {  //редактирование, время посл�
                 <li><b>Дата дедлайна:</b> {{ card.dateD }}</li>
                 <li><b>Дата создания:</b> {{ card.dateC }}</li>
                 <li v-if="card.dateL"><b>Дата последних изменений</b>{{ card.dateL }}</li>
+                <li v-if="card.reason.length"><b>Комментарии: </b><li v-for="r in card.reason">{{ r }}</li></li>
+                <button @click="updateC(card)">Изменить</button>
+                <div v-if="card.updateCard">
+                    <form @submit.prevent="updateTask(card)">
+                        <p>Введите заголовок: 
+                            <input type="text" v-model="card.title" maxlength="30" placeholder="Заголовок">
+                        </p>
+                        <p>Добавьте описание задаче: 
+                            <textarea v-model="card.description" cols="20" rows="5"></textarea>
+                        </p>
+                        <p>Укажите дату дедлайна: 
+                            <input type="date" v-model="card.dateD">
+                        </p>
+                        <p>
+                            <input type="submit" value="Изменить карточку">
+                        </p>
+                    </form>
+                </div>
             </ul>
+             <button @click="moving(card)">--></button>
         </div>        
     </div>
     `,
     methods: {
-
+        updateC(card){
+            card.updateCard = true
+            console.log(card.updateCard)
+        },
+        updateTask(card){
+            this.column2.push(card)
+            this.column2.splice(this.column2.indexOf(card), 1)
+            card.dateL = new Date().toLocaleString()
+            return card.updateCard = false
+        },
+        moving(card){
+            eventBus.$emit('moving2', card)
+        }
     },
 })
 
 Vue.component('column3', {  //редактирование, время последнего редактирования
     props:{                 //перемещение в 4 столб, перемещение во 2 столб + причина возврата
-    },
+        column3:{
+            type: Array,
+            required: true
+        },
+        card:{
+            type:Object,
+            required: true
+        },
+        reason:{
+            type:Array,
+            required: true
+        }
+        },
+
     template:`
     <div class="column">
         <h3>Тестирование</h3>
+         <div v-for="card in column3">
+            <ul>
+                <li><b>Заголовок:</b> {{ card.title }}</li>
+                <li><b>Описание задачи:</b> {{ card.description }}</li>
+                <li><b>Дата дедлайна:</b> {{ card.dateD }}</li>
+                <li><b>Дата создания:</b> {{ card.dateC }}</li>
+                <li v-if="card.dateL"><b>Дата последних изменений: </b>{{ card.dateL }}</li>
+                <li v-if="card.reason.length"><b>Комментарии: </b><li v-for="r in card.reason">{{ r }}</li></li>
+                <li v-if="moveBack">
+                    <form @submit.prevent="onSubmit(card)">
+                        <textarea v-model="reason2" cols="20" rows="4"></textarea>
+                        <input type="submit" value="Сохранить">
+                    </form>
+                </li>
+                <button @click="updateC(card)">Изменить</button>
+                <div v-if="card.updateCard">
+                    <form @submit.prevent="updateTask(card)">
+                        <p>Введите заголовок: 
+                            <input type="text" v-model="card.title" maxlength="30" placeholder="Заголовок">
+                        </p>
+                        <p>Добавьте описание задаче: 
+                            <textarea v-model="card.description" cols="20" rows="5"></textarea>
+                        </p>
+                        <p>Укажите дату дедлайна: 
+                            <input type="date" v-model="card.dateD">
+                        </p>
+                        <p>
+                            <input type="submit" value="Изменить карточку">
+                        </p>
+                    </form>
+                </div>
+            </ul>
+            <button @click="movingBack"><--</button>
+            <button @click="moving">--></button>
+        </div>    
     </div>
     `,
-    methods: {
 
+    data(){
+        return{
+            moveBack: false,
+            reason2: null
+        }
+    },
+    methods: {
+        updateC(card){
+            card.updateCard = true
+            console.log(card.updateCard)
+        },
+        updateTask(card){
+            this.column3.push(card)
+            this.column3.splice(this.column3.indexOf(card), 1)
+            card.dateL = new Date().toLocaleString()
+            return card.updateCard = false
+        },
+        moving(card){
+            eventBus.$emit('moving3-4', card)
+            card.dateE = new Date().toLocaleDateString()
+        },
+        movingBack(){
+            this.moveBack = true
+        },
+        onSubmit(card) {
+            card.reason.push(this.reason2)
+            eventBus.$emit('moving3-2', card)
+            this.reason2 = null
+            this.moveBack = false
+        }
     },
 })
 
 Vue.component('column4', {  //проверка срока дедлайна: срок не выполнен - просроченная,
     props:{                 //срок выполнен - выполненная в срок
-
+        column4:{
+            type: Array,
+            required: true,
+        },
+        card: {
+            type: Object,
+            required: true
+        }
     },
     template:`
     <div class="column">
         <h3>Выполненные задачи</h3>
+        <div v-for="card in column4">
+            <ul>
+                <li><b>Заголовок:</b> {{ card.title }}</li>
+                <li><b>Описание задачи:</b> {{ card.description }}</li>
+                <li><b>Дата дедлайна:</b> {{ card.dateD }}</li>
+                <li><b>Дата создания:</b> {{ card.dateC }}</li>
+                <li v-if="card.dateL"><b>Дата последних изменений: </b>{{ card.dateL }}</li>
+            </ul>
+        </div>
     </div>
     `,
     methods: {
