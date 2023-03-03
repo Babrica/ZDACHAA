@@ -41,6 +41,18 @@ Vue.component('cards-kanban', {
         eventBus.$on('moving3-2', card => {
             this.column2.push(card)
             this.column3.splice(this.column3.indexOf(card), 1)
+            card.dateE = new Date().toLocaleDateString()
+        })
+
+        eventBus.$on('moving3-4', card => {
+            this.column4.push(card)
+            this.column3.splice(this.column3.indexOf(card), 1)
+            card.dateE = new Date().toLocaleDateString()
+            card.dateE = card.dateE.split('.').reverse().join('-')
+            console.log(card)
+            if (card.dateE > card.dateD){
+                card.inTime = false
+            }
         })
     }
 })
@@ -278,7 +290,7 @@ Vue.component('column3', {  //редактирование, время посл�
                 </div>
             </ul>
             <button @click="movingBack"><--</button>
-            <button @click="moving">--></button>
+            <button @click="moving(card)">--></button>
         </div>    
     </div>
     `,
@@ -302,7 +314,6 @@ Vue.component('column3', {  //редактирование, время посл�
         },
         moving(card){
             eventBus.$emit('moving3-4', card)
-            card.dateE = new Date().toLocaleDateString()
         },
         movingBack(){
             this.moveBack = true
@@ -337,6 +348,10 @@ Vue.component('column4', {  //проверка срока дедлайна: ср
                 <li><b>Дата дедлайна:</b> {{ card.dateD }}</li>
                 <li><b>Дата создания:</b> {{ card.dateC }}</li>
                 <li v-if="card.dateL"><b>Дата последних изменений: </b>{{ card.dateL }}</li>
+                <li v-if="card.inTime">Задача выполнена в срок!!!</li>
+                
+                <li v-else>Задача выполнена не в срок :(</li>
+                <li>
             </ul>
         </div>
     </div>
