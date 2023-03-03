@@ -18,7 +18,7 @@ Vue.component('cards-kanban', {
             column2:[],
             column3:[],
             column4:[],
-            updateCard: false
+            showCard: true,
         }
     },
     methods:{
@@ -68,9 +68,10 @@ Vue.component('fill', {     //содержит:дата создания, заг
                 description: this.description,
                 dateD: this.dateD,                  //дата дедлайна
                 dateC: new Date().toLocaleString(),   //дата создания
+                updateCard: false,
                 dateL: null,                            //дата последних изменений
                 dateE: null,                            //дата выполнения
-                inTime: true                            //в срок или нет
+                inTime: true,                            //в срок или нет
             }
             eventBus.$emit('card-create', card)
             this.title = null
@@ -91,10 +92,6 @@ Vue.component('column1', {  //создание, удаление, редакти
             type: Array,
             required: true
         },
-        updateCard:{
-            type:Boolean,
-            required: true
-        }
     },
     template:`
     <div class="column">
@@ -106,25 +103,26 @@ Vue.component('column1', {  //создание, удаление, редакти
                 <li><b>Дата дедлайна:</b> {{ card.dateD }}</li>
                 <li><b>Дата создания:</b> {{ card.dateC }}</li>
                 <li v-if="card.dateL"><b>Дата последних изменений</b>{{ card.dateL }}</li>
-            </ul>
-            <button @click="deleteCard(card)">Удалить</button>
-            <button @click="updateC">Изменить</button>
-            <div v-if="updateCard">
-                <form @submit.prevent="updateTask(card)">
-                    <p>Введите заголовок: 
-                        <input type="text" v-model="card.title" maxlength="30" placeholder="Заголовок">
-                    </p>
-                    <p>Добавьте описание задаче: 
-                        <textarea v-model="card.description" cols="20" rows="5"></textarea>
-                    </p>
-                    <p>Укажите дату дедлайна: 
-                        <input type="date" v-model="card.dateD">
-                    </p>
-                    <p>
-                        <input type="submit" value="Изменить карточку">
-                    </p>
-                </form>
-            </div>
+                <button @click="deleteCard(card)">Удалить</button>
+                <button @click="updateC(card)">Изменить</button>
+                <div v-if="card.updateCard">
+                    <form @submit.prevent="updateTask(card)">
+                        <p>Введите заголовок: 
+                            <input type="text" v-model="card.title" maxlength="30" placeholder="Заголовок">
+                        </p>
+                        <p>Добавьте описание задаче: 
+                            <textarea v-model="card.description" cols="20" rows="5"></textarea>
+                        </p>
+                        <p>Укажите дату дедлайна: 
+                            <input type="date" v-model="card.dateD">
+                        </p>
+                        <p>
+                            <input type="submit" value="Изменить карточку">
+                        </p>
+                    </form>
+                </div>
+             </ul>
+             
         </div>
     </div>
     `,
@@ -132,14 +130,14 @@ Vue.component('column1', {  //создание, удаление, редакти
         deleteCard(card){
             this.column1.splice(this.column1.indexOf(card), 1)
         },
-        updateC(){
-            this.updateCard = true
-            console.log(this.updateCard)
+        updateC(card){
+            card.updateCard = true
+            console.log(card.updateCard)
         },
         updateTask(card){
             this.column1.push(card)
             this.column1.splice(this.column1.indexOf(card), 1)
-        }
+        },
     },
 })
 
