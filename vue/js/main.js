@@ -28,6 +28,11 @@ Vue.component('cards-kanban', {
         eventBus.$on('card-create', card => {
             this.column1.push(card)
         })
+        eventBus.$on('moving1', card => {
+            this.column2.push(card)
+            this.column1.splice(this.column1.indexOf(card), 1)
+
+        })
     }
 })
 
@@ -122,7 +127,7 @@ Vue.component('column1', {  //создание, удаление, редакти
                     </form>
                 </div>
              </ul>
-             
+            <button @click="moving(card)">--></button>
         </div>
     </div>
     `,
@@ -137,17 +142,38 @@ Vue.component('column1', {  //создание, удаление, редакти
         updateTask(card){
             this.column1.push(card)
             this.column1.splice(this.column1.indexOf(card), 1)
+            card.dateL = new Date().toLocaleString()
+            return card.updateCard = false
         },
+        moving(card){
+            eventBus.$emit('moving1', card)
+        }
     },
 })
 
 Vue.component('column2', {  //редактирование, время последнего редактирования, перемещение в третий столб
     props:{
-
+        column2:{
+            type: Array,
+            required: true
+        },
+        card:{
+            type:Object,
+            required: true
+        }
     },
     template:`
     <div class="column">
         <h3>Задачи в работе</h3>
+         <div v-for="card in column2">
+            <ul>
+                <li><b>Заголовок:</b> {{ card.title }}</li>
+                <li><b>Описание задачи:</b> {{ card.description }}</li>
+                <li><b>Дата дедлайна:</b> {{ card.dateD }}</li>
+                <li><b>Дата создания:</b> {{ card.dateC }}</li>
+                <li v-if="card.dateL"><b>Дата последних изменений</b>{{ card.dateL }}</li>
+            </ul>
+        </div>        
     </div>
     `,
     methods: {
@@ -157,7 +183,6 @@ Vue.component('column2', {  //редактирование, время посл�
 
 Vue.component('column3', {  //редактирование, время последнего редактирования
     props:{                 //перемещение в 4 столб, перемещение во 2 столб + причина возврата
-
     },
     template:`
     <div class="column">
