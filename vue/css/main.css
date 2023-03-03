@@ -1,0 +1,20 @@
+textarea{
+    resize: none;
+}
+
+#columns{
+    display: flex;
+}
+
+.column{
+    width: 25%;
+    text-align: center;
+}
+
+ul{
+    padding: 0;
+}
+
+li{
+    list-style-type: none;
+}
