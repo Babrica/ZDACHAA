@@ -76,8 +76,12 @@ Vue.component('fill', {    //дата создания, заголовок, оп
                         <input required type="date" v-model="dateD">
                     </p>
                     <p class="pForm">
-                        <input class="button" type="submit" value="Добвить задачу">
+                       <input  type="color" v-model="coloR">    
+                        </p>
+                    <p class="pForm">
+                        <input  class="button" type="submit" value="Добвить задачу">
                     </p>
+                    <div class="card" v-bind:style="{backgroundColor:coloR}"></div>
                 </form>
             </div>
         </div>    
@@ -88,11 +92,15 @@ Vue.component('fill', {    //дата создания, заголовок, оп
             title: null,
             description: null,
             dateD: null,
-            show: false
+            show: false,
+            coloR:'#f71707',
+
+
         }
     },
     methods: {
         onSubmit() {
+
             let card = {
                 title: this.title,
                 description: this.description,
@@ -101,13 +109,18 @@ Vue.component('fill', {    //дата создания, заголовок, оп
                 updateCard: false,
                 dateL: null,                            //дата последних изменений
                 dateE: null,                            //дата выполнения
-                inTime: true,                            //в срок или нет
+                inTime: true,
+                coloR:this.coloR,
+
+
+                //в срок или нет
                 reason: []
             }
             eventBus.$emit('card-create', card)
             this.title = null
             this.description = null
             this.dateD = null
+            this.coloR = null
             this.closeModal()
             console.log(card)
         },
@@ -130,16 +143,23 @@ Vue.component('column1', {  //создание, удаление, редакти
             type: Array,
             required: true
         },
+        coloR:{
+            type:String,
+            required:true
+        }
     },
     template:`
     <div class="column">
         <h3>Запланированные задачи</h3>
-        <div class="card" v-for="card in column1">
+        <div  class="card" v-bind:style="{backgroundColor:coloR}"  v-for="card in column1">
             <ul>
+                <input  type="color" v-model="coloR"> 
                 <li class="title"><b>Заголовок:</b> {{ card.title }}</li>
                 <li><b>Описание задачи:</b> {{ card.description }}</li>
                 <li><b>Дата дедлайна:</b> {{ card.dateD }}</li>
                 <li><b>Дата создания:</b> {{ card.dateC }}</li>
+                    
+                         
                 <li v-if="card.dateL"><b>Дата последних изменений</b>{{ card.dateL }}</li>
                 <button @click="deleteCard(card)">Удалить</button>
                 <button @click="updateC(card)">Изменить</button>
@@ -154,6 +174,7 @@ Vue.component('column1', {  //создание, удаление, редакти
                         <p>Укажите дату дедлайна: 
                             <input type="date" v-model="card.dateD">
                         </p>
+                       
                         <p>
                              <input class="button" type="submit" value="Изменить карточку">
                         </p>
@@ -164,6 +185,11 @@ Vue.component('column1', {  //создание, удаление, редакти
         </div>
     </div>
     `,
+    data(){
+        return {
+            coloR: null,
+        }
+    },
     methods: {
         deleteCard(card){
             this.column1.splice(this.column1.indexOf(card), 1)
@@ -202,8 +228,9 @@ Vue.component('column2', {  //редактирование, время посл�
     template:`
     <div class="column">
         <h3>Задачи в работе</h3>
-         <div class="card" v-for="card in column2">
+         <div class="card" v-bind:style="{backgroundColor:coloR}"   v-for="card in column2">
             <ul>
+                 <input  type="color" v-model="coloR"> 
                  <li class="title"><b>Заголовок:</b> {{ card.title }}</li>
                 <li><b>Описание задачи:</b> {{ card.description }}</li>
                 <li><b>Дата дедлайна:</b> {{ card.dateD }}</li>
@@ -232,6 +259,12 @@ Vue.component('column2', {  //редактирование, время посл�
         </div>        
     </div>
     `,
+    data(){
+        return {
+            coloR: null,
+        }
+    },
+
     methods: {
         updateC(card){
             card.updateCard = true
@@ -268,8 +301,9 @@ Vue.component('column3', {  //редактирование, время посл�
     template:`
     <div class="column">
         <h3>Тестирование</h3>
-        <div class="card" v-for="card in column3">
+        <div class="card" v-bind:style="{backgroundColor:coloR}" v-for="card in column3">
             <ul>
+                <input  type="color" v-model="coloR"> 
                 <li class="title"><b>Заголовок:</b> {{ card.title }}</li>
                 <li><b>Описание задачи:</b> {{ card.description }}</li>
                 <li><b>Дата дедлайна:</b> {{ card.dateD }}</li>
@@ -306,10 +340,12 @@ Vue.component('column3', {  //редактирование, время посл�
     </div>
     `,
 
+
     data(){
         return{
             moveBack: false,
-            reason2: null
+            reason2: null,
+            coloR: null,
         }
     },
     methods: {
@@ -352,7 +388,7 @@ Vue.component('column4', {  //проверка срока дедлайна: ср
     template:`
     <div class="column">
         <h3>Выполненные задачи</h3>
-         <div class="card" v-for="card in column4">
+         <div class="card" v-bind:style="{backgroundColor:coloR}"  v-for="card in column4">
             <ul>
                  <li class="title"><b>Заголовок:</b> {{ card.title }}</li>
                 <li><b>Описание задачи:</b> {{ card.description }}</li>
@@ -368,6 +404,25 @@ Vue.component('column4', {  //проверка срока дедлайна: ср
     methods: {
 
     },
+
+
+
+
+})
+Vue.component('test',{
+    template:`
+  <div class="container">
+    <label for="color">Choose a color:</label>
+    <input id="color" type="color" v-model="background_color">
+  </div>
+    `,
+    data(){
+        return{
+            background_color:'#ff0000'
+        }
+    }
+
+
 })
 
 let app = new Vue({
